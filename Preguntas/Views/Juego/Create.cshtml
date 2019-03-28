@@ -1,0 +1,16 @@
+﻿<!--CREATE DE JUEGO -->
+@model Preguntas.Models.Dominio.ViewModels.Preguntas.JuegoABMViewModel
+
+<div class="container">
+            @using (Html.BeginForm("Create", "Juego", FormMethod.Post, new { @id = "form" }))
+            {
+                <div class="form-row mt-2">
+                    <div class="col-md-6 form-group">
+                        <label for="Comentario" class="col-form-label">Nombre</label>
+                        @Html.TextBoxFor(m => m.TipoDeJuego , new { @class = "form-control" })
+                    </div>
+
+                    <button class="btn btn-primary">Guardar</button>
+                </div>
+            }
+</div>

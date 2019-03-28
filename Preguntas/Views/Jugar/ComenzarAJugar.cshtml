@@ -1,0 +1,52 @@
+﻿@model Preguntas.Models.Dominio.ViewModels.Preguntas.PreguntaJuegoViewModel
+
+<div class="container">
+    <div class="text-center row">
+        <h1 id="@Model.PreguntaJuego.Id">@Model.PreguntaJuego.Nombre</h1>
+    </div>
+    <div class="text-center row">
+        @foreach (var item in Model.RespuestaJuego)
+            {
+            <h3 class="resp">@(item.Nombre)</h3> <a class="respuesta btn btn-info" id="@(item.Id)">Responder</a>
+        }
+    </div>
+
+</div>
+@section Scripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var juegoid = '@Model.JuegoId';
+        var preguntajuego = '@Model.PreguntaJuego.Id';
+        var correcta = '@Model.RespuestaCorrecta';
+
+        $('.respuesta').on("click", function () {
+            var url = '@(Url.Action("RespuestaPregunta", "Jugar"))';
+            var id = $(this).attr('id');
+
+            var respuestaDelUsuario = {
+                JuegoId: juegoid,
+                PreguntaId: preguntajuego,
+                RespuestaId: id
+            }
+
+            if (id == correcta) {
+                $("#" + id).removeClass("btn-info").addClass("btn-success");
+            }
+
+            else {
+                $("#" + id).removeClass("btn-info").addClass("btn-danger");
+                $("#" + correcta).removeClass("btn-info").addClass("btn-success");
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { model: respuestaDelUsuario },
+                success: setTimeout(function (Result) {
+                    location.reload();
+                }, 1750)
+            });
+        });
+    });
+</script>}

@@ -1,0 +1,82 @@
+﻿@model List<Preguntas.Models.Dominio.ViewModels.Preguntas.PreguntasGrillaViewModel>
+
+<div class="container">
+    <div class="col-md-12">
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>
+                        Pregunta
+                    </th>
+                    <th>
+                        Puntaje
+                    </th>
+                    <th>
+                        Juego
+                    </th>
+                    <th>
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pregunta in Model)
+                {
+                <tr id="@(pregunta.Id)">
+                    <td>
+                        @(pregunta.Nombre)
+                    </td>
+                    <td>
+                        @(pregunta.Puntaje)
+                    </td>
+                    @*<td>
+                        @foreach(var resp in pregunta.Respuestas){
+                            @resp.Nombre
+                        }
+                    </td>*@
+                    <td>
+                        <a href="@Url.Action("Edit")/@(pregunta.Id)" class="btn btn-warning">Edit</a><br>
+                        <a id="@pregunta.Id" class="btnDelete btn btn-danger">Borrar</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/sweetalert/sweetalert.min.js"></script>
+    <link href="~/assets/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".btnDelete").click(function () {
+                var idEliminar = $(this).attr('id')
+                swal({
+                    title: "¿Está seguro de que desea eliminar?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Sí",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true
+                },function(){
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Delete", "Pregunta")',
+                    data: { id: idEliminar },
+                    success: function (data) {
+                        swal("¡Eliminado!", "success"),
+                        location.reload()
+                    },
+                    error: function (error) {
+                        sawl("ERROR!", "error")
+                    }
+                    });
+                });
+            });
+        });
+    </script>}

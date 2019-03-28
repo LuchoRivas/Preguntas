@@ -1,0 +1,34 @@
+﻿@model Preguntas.Models.Dominio.ViewModels.Preguntas.JuegoFinalizadoViewModel
+<div class="container">
+    <h3 class="text-center">Felicidades<strong> @Model.Usuario!</strong></h3>
+    <h3 class="text-center">El juego fue <strong>@Model.Juego</strong></h3>
+    <h4 class="alert alert-info">Puntuacion total: @Model.PuntajeTotal</h4>
+
+    <br />
+    <div class="row well text-center">
+            @foreach (var item in Model.PreguntaEstadistica)
+            {   <dl>
+                <dt>@item.PreguntaEstadisticaTexto</dt>
+                @foreach (var resp in item.RespuestaEstadistica)
+                {
+                    if (resp.EsCorrecta)
+                    {
+                        <dd class="text-success">@resp.RespuestaTexto <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></dd>
+                    }
+                    else if (!resp.EsCorrecta && resp.RespuestaElegida)
+                    {
+                        <dd class="text-danger">@resp.RespuestaTexto <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></dd>
+                    }
+                    else
+                    {
+                        <dd>@resp.RespuestaTexto</dd>
+                    }
+                }
+            </dl>
+            <span><ins>Puntuacion:</ins>@item.PuntajePreguntaEstadistica</span>
+            }
+    </div>
+    <br />
+    
+    <a href="../Index" class="btn btn-info btn-lg">Volver</a>
+</div>

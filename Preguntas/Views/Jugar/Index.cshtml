@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Preguntas.Models.General.SelectBoxViewModel>
+
+<div class="container">
+    <div class="col-md-offset-3 col-md-6">
+        <h3 class="text-center">Elige una categoria de preguntas</h3>
+        <div id="ListaJuegos">
+            @foreach (var juego in Model)
+            {
+                <a style="font-size:18px" href="@Url.Action("ComenzarAJugar")/@(juego.Id)" class="btn btn-info btn-block">@juego.Nombre</a>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn').click(function () {
+            var juegoid = $(this).attr('id')
+            console.log(juegoid)
+        });
+    }); //document ready
+</script>
+}

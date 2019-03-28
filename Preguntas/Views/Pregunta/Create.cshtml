@@ -1,0 +1,175 @@
+﻿<!-- CREATE Pregunta  -->
+<style>
+    .modal-backdrop {
+        z-index: -1;
+    }
+</style>
+<div class="container">
+    <h3>Crear Pregunta</h3>
+
+    <div class="col-md-offset-4 col-md-6">
+        <div class="form-group">
+            <label for="pregunta">Pregunta </label><input class="form-control" type="text" id="nombre" />
+            <br>
+            <label for="puntaje">Puntaje</label> <input class="form-control" type="number" id="puntaje" />
+            <br />
+            <label for="selectjuegos">Juego </label> <div id="ListaJuegos"></div>
+            <br />
+        </div>
+
+        <!-- MODAL RESPUESTA -->
+        <div id="divPrincipal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Añadir Respuesta</button>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Crear Respuesta</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label>Respuesta</label> <input style="max-width: 100%; min-width: 100%;" type="text" id="creaResp" class="form-control" /></div>
+                        <div class=" checkbox"><label><b>Respuesta correcta</b><input style="max-width: 10%; min-width: 10%;" type="checkbox" id="respBool" /></label></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white btn-block" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success btn-block" id="btnGuardarresp">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /MODAL RESPUESTAS -->
+        <br />
+        <h5 class="text-center">Lista de respuestas</h5>
+
+        <table id="tresp" class="table table-striped">
+            <tr>
+                <th>Respuesta</th>
+                <th>Acciones</th>
+            </tr>
+        </table>
+        <!-- ERRORES -->
+        <div id="errores" class="alert alert-danger col-md-4" style="display:none">
+        </div>
+        <br />
+        <div class="col-md-6">
+            <button class="btn btn-success" id="enviar">Guardar</button>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/chosen/chosen.jquery.js"></script>
+    <link href="~/assets/chosen/chosen.css" rel="stylesheet" />
+    <script src="~/assets/sweetalert/sweetalert.min.js"></script>
+    <link href="~/assets/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var pregArr = [];
+            var respid = 0;
+
+            function refresh() {
+                //borra respuesta
+
+                $('.btnDelete').click(function () {
+                    var mID = $(this).attr('id');
+                    swal({
+                        title: "¿Está seguro de que desea eliminar la preguta?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true
+                    }, function () {
+                        for (var i = 0; i < pregArr.length; i++) {
+                            if (pregArr[i].ID == mID) {
+                                pregArr.splice(i, 1)
+                                $('#' + mID).remove();
+                                $('.resp' + mID).remove().removeClass(this);
+                            }
+                        }
+                        })
+                })
+            }
+            //Modal de resp Creacion
+
+            $('#btnGuardarresp').click(function () {
+                var resp = {
+                    Nombre: $('#creaResp').val(),
+                    ID: respid,
+                    RespuestaCorrecta: $('#respBool').is(":checked")
+                }
+                respid = respid + 1;
+                pregArr.push(resp);
+                $('#tresp').off();
+                $('#tresp').append('<tr><td class="resp' + resp.ID + '">' + resp.Nombre + '</td>' + '<td><button class="btn btn-primary btnDelete" id="' + resp.ID + '">Borrar</button></td></tr>');
+                $('#creaResp').val("");
+                $('#respBool').prop('checked', false);
+                $('#exampleModal').modal('hide');
+                refresh();
+            });
+
+             $.ajax({
+                type: "GET",
+                url: '@Url.Action("ListaJuegos", "Pregunta")',
+                success: function (listajuegos) {
+                    var juegos = '<select id="selectjuegos"><option value="">-</option>';
+
+                    for (var i = 0; i < listajuegos.Result.length; i++) {
+                        juegos += '<option class="juego" value="' + listajuegos.Result[i].Id + '">'
+                        juegos += listajuegos.Result[i].Nombre + '</option>'
+                    }
+
+                    juegos += '</select>';
+                    $("#selectjuegos").off();
+                    $("#ListaJuegos").append(juegos);
+                    $('#selectjuegos').chosen({ width: '50%' });
+                }
+            });
+
+            // Almacena los datos de los campos en la variable preg
+            $("#enviar").click(function () {
+                var preg = {
+                    Nombre: $("#nombre").val(),
+                    Juego: $('#selectjuegos').val(),
+                    Puntaje: $('#puntaje').val(),
+                    Respuestas: pregArr
+                };
+                //POST del metodo Create del cotrolador Restaurante, antes de almacenar ejecuta la funcion validar.
+                $.ajax({
+                    type: "POST",
+                    url: '@(Url.Action("Create", "Pregunta"))',
+                    data: { preg: preg },
+                    success: function (preg) {
+                        preg.Result,
+                            location.reload();
+                        //validar(resto.Result, resto.Error);
+                    }
+                })
+             });
+
+             // Valida los campos de nombre y direccion
+             //function validar(result, error) {
+             //    if (result == "OK")
+             //        location.reload();
+             //    else {
+             //        var msg = '<ul>';
+             //        for (var i = 0; i < error.length; i++) {
+             //            msg += '<li>' + error[i] + '</li >';
+             //        }
+
+             //        msg += '</ul>';
+             //        $("#errores").html(msg);
+             //        $('#errores').css('display', 'block');
+             //    }
+             //};
+        });
+    </script>
+}

@@ -1,0 +1,27 @@
+﻿@model Preguntas.Models.Dominio.ViewModels.Preguntas.RespuestaABMViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Create", "Respuesta", FormMethod.Post, new { @id = "form" }))
+            {
+            <div class="form-row mt-2">
+                <div class="col-md-6 form-group">
+                    <label for="Respuesta" class="col-form-label">Respuesta</label>
+                    @Html.TextBoxFor(m => m.Respuesta, new { @class = "form-control" })
+                    <label for="RespuestaCorrecta">Es una respuesta correcta?</label>
+                    @Html.CheckBoxFor(m => m.RespuestaCorrecta)
+                </div>
+            </div>
+
+                <button class="btn btn-primary">Guardar</button>
+        }
+    </div>
+</body>
+</html>
