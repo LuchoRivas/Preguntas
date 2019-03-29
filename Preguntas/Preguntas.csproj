@@ -193,6 +193,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArchivoController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\GeolocalizacionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Datos\ExtensionesPaginacion.cs" />
+    <Compile Include="Models\Dominio\Archivo.cs" />
     <Compile Include="Models\Dominio\Enum\RoleEnum.cs" />
     <Compile Include="Models\Dominio\General\Repositorio.cs" />
     <Compile Include="Models\Dominio\General\_Entidad.cs" />
@@ -334,6 +336,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Archivo\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Geolocalizacion\" />
   </ItemGroup>
