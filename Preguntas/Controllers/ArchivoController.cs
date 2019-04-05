@@ -1,7 +1,9 @@
 ﻿using Binit.Infraestructura.Website.Models;
 using Binit.Infraestructura.Website.Models.Dominio.Archivo;
 using Binit.Infraestructura.Website.Models.Dominio.General;
+using Preguntas.Controllers;
 using Preguntas.Models;
+using Preguntas.Models.Dominio.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,7 +14,7 @@ using System.Web.Mvc;
 
 namespace Binit.Infraestructura.Website.Controllers
 {
-    public class ArchivoController : Controller
+    public class ArchivoController : BaseController
     {
         public ActionResult ObtenerImagenPorId(Guid id)
         {
@@ -29,21 +31,24 @@ namespace Binit.Infraestructura.Website.Controllers
             return File(bytes, "image/" + extension);
         }
 
-        public ActionResult SubirArchivoWysiwyg(HttpPostedFileBase file)
+        public ActionResult SubirArchivo()
         {
-
             var db = new ApplicationDbContext();
+
+            var contenido = this.Contenido;
+            //Obtener extension jpeg
+            var extension = "." + contenido.Substring(11, 4);
+            //Saca lo que no sirve del string
+            var convert = contenido.Split(',').Last();
+            //Convierte a byte
+            var b64ToByte = Convert.FromBase64String(convert);
 
             //Obtengo el path del web.config
             var path = ConfigurationManager.AppSettings["PathArchivos"];
 
-            //Obtengo Extension
-            var extension = Path.GetExtension(file.FileName);
-
             //Guarda en bd
-
             var imagen = new Archivo();
-            imagen.Nombre = file.FileName;
+            imagen.Nombre = "Test";
             imagen.IdFileManager = imagen.Id.ToString();
             imagen.Extension = extension;
 
@@ -59,13 +64,8 @@ namespace Binit.Infraestructura.Website.Controllers
                 Directory.CreateDirectory(path);
             path += guid + extension;
 
-            //Obtengo el byte[] de la File enviada
-            MemoryStream target = new MemoryStream();
-            file.InputStream.CopyTo(target);
-            byte[] bytes = target.ToArray();
-
             //Guardo en Disco
-            System.IO.File.WriteAllBytes(path, bytes);
+            System.IO.File.WriteAllBytes(path, b64ToByte);
 
             new Repositorio<Archivo>(db).Crear(imagen);
 

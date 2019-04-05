@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Binit.Infraestructura.Website.Models.Dominio.Archivo;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Preguntas.Models.Dominio;
@@ -37,5 +38,6 @@ namespace Preguntas.Models
         public DbSet<Juego> Juegos { get; set; }
         public DbSet<PreguntaPorRespuesta> PreguntaPorRespuesta { get; set; }
         public DbSet<Geolocalizacion> Geolocalizacion { get; set; }
+        public DbSet<Archivo> Archivos { get; set; }
     }
 }

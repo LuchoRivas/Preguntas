@@ -130,7 +130,7 @@ namespace Preguntas.Controllers
                     {
                         var userId = User.Identity.GetUserId();
                         var usuarioData = db.Usuarios.FirstOrDefault(pr => pr.UsuarioApp.Id == userId && pr.UsuarioApp.Email == model.Email);
-                        //model.Token = Guid.NewGuid().ToString();
+                        model.Token = Guid.NewGuid().ToString();
                        
                         var Response = new
                         {
