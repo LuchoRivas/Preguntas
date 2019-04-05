@@ -33,52 +33,47 @@ namespace Binit.Infraestructura.Website.Controllers
 
         public ActionResult SubirArchivo()
         {
-            string convert = this.Contenido.Replace("data:image/png;base64,", String.Empty);
-            var data = Convert.FromBase64String(convert);
-            //var model = Newtonsoft.Json.JsonConvert.DeserializeObject<ArchivoViewModel>(this.Contenido);
             var db = new ApplicationDbContext();
+
+            var contenido = this.Contenido;
+            //Obtener extension jpeg
+            var extension = "." + contenido.Substring(11, 4);
+            //Saca lo que no sirve del string
+            var convert = contenido.Split(',').Last();
+            //Convierte a byte
+            var b64ToByte = Convert.FromBase64String(convert);
 
             //Obtengo el path del web.config
             var path = ConfigurationManager.AppSettings["PathArchivos"];
 
-            //Obtengo Extension
-            //var extension = Path.GetExtension(file.FileName);
+            //Guarda en bd
+            var imagen = new Archivo();
+            imagen.Nombre = "Test";
+            imagen.IdFileManager = imagen.Id.ToString();
+            imagen.Extension = extension;
 
-            ////Guarda en bd
+            //Genero Id
+            var guid = imagen.IdFileManager;
 
-            //var imagen = new Archivo();
-            //imagen.Nombre = file.FileName;
-            //imagen.IdFileManager = imagen.Id.ToString();
-            //imagen.Extension = extension;
-
-            ////Genero Id
-            //var guid = imagen.IdFileManager;
-
-            ////Genero el path donde guardare el archivo y si no existe lo genero
-            //path += guid.Substring(0, 2) + @"\";
-            //if (!Directory.Exists(path))
-            //    Directory.CreateDirectory(path);
-            //path += guid.Substring(2, 1) + @"\";
-            //if (!Directory.Exists(path))
-            //    Directory.CreateDirectory(path);
-            //path += guid + extension;
-
-            ////Obtengo el byte[] de la File enviada
-            //MemoryStream target = new MemoryStream();
-            //file.InputStream.CopyTo(target);
-            //byte[] bytes = target.ToArray();
+            //Genero el path donde guardare el archivo y si no existe lo genero
+            path += guid.Substring(0, 2) + @"\";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path += guid.Substring(2, 1) + @"\";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path += guid + extension;
 
             //Guardo en Disco
-            //System.IO.File.WriteAllBytes(path, bytes);
+            System.IO.File.WriteAllBytes(path, b64ToByte);
 
-            //new Repositorio<Archivo>(db).Crear(imagen);
+            new Repositorio<Archivo>(db).Crear(imagen);
 
             //Link para obtener imagen
-            //var link = ConfigurationManager.AppSettings["Core"] + "/Archivo/ObtenerImagenPorId/" + guid;
+            var link = ConfigurationManager.AppSettings["Core"] + "/Archivo/ObtenerImagenPorId/" + guid;
 
             //Retorno link del archivo
-            //return Json(new { link = link }, JsonRequestBehavior.AllowGet);
-            return Json(new { Result = "OK" }, JsonRequestBehavior.AllowGet);
+            return Json(new { link = link }, JsonRequestBehavior.AllowGet);
         }
     }
 }
