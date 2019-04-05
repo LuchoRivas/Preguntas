@@ -13,7 +13,8 @@ namespace Preguntas.Controllers
     public class BaseController : Controller
     {
         public ApplicationDbContext db = new ApplicationDbContext();
-        public string Contenido { get =>
+        public string Contenido
+        { get =>
             System.Web.HttpContext.Current.Request.HttpMethod == "POST" ?
             System.Web.HttpContext.Current.Request.Form["contenido"] : System.Web.HttpContext.Current.Request.QueryString["contenido"];
         }
