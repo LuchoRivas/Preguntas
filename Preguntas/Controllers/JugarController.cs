@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using cuidarlos.web.Controllers;
+using Microsoft.AspNet.Identity;
 using Preguntas.Models.Dominio;
 using Preguntas.Models.Dominio.ViewModels;
 using Preguntas.Models.Dominio.ViewModels.Preguntas;
@@ -180,6 +181,7 @@ namespace Preguntas.Controllers
 
         public ActionResult JuegoFinalizadoMobile()
         {
+            OneSignalController.SendNotificationToCuidarlos();
             Guid id = Newtonsoft.Json.JsonConvert.DeserializeObject<Guid>(this.Contenido);
             var usuarioNickname = db.Usuarios.FirstOrDefault(u => u.UsuarioApp.Id == usuarioId);
             var nombreJuego = db.Juegos.FirstOrDefault(j => j.Id == id);

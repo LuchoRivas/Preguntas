@@ -97,7 +97,7 @@ namespace cuidarlos.web.Controllers
         }
 
         #region Test
-        public ActionResult SendNotificationToCuidarlos()
+        public static void SendNotificationToCuidarlos()
         {
             var push = new PushNotification
             {
@@ -109,8 +109,6 @@ namespace cuidarlos.web.Controllers
                 OneSignalId = CuidarlosSignalId
             };
             var result = SendToDevice(push);
-
-            return Json(result ? "OK" : "ERROR", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SendNotificationToAle()
