@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /Preguntas/Models/Models.rar
+/Preguntas/Web.config
